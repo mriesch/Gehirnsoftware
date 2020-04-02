@@ -7,6 +7,13 @@
 
 repositories {
     mavenCentral()
+    maven {
+        url "http://maven.icm.edu.pl/artifactory/repo/"
+    }
+    flatDir {
+        dirs 'lib'
+    }
+
 }
 
 apply plugin: 'java'
@@ -17,9 +24,10 @@ apply plugin: 'application'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-dependencies {
 
-    compile "joda-time:joda-time:2.2"
+dependencies {
+    compile files("${System.getProperty('java.home')}/../lib/tools.jar")
+    compile "org.javassist:javassist:3.27.0-GA"
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.5.2")
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
     testCompile("org.junit.jupiter:junit-jupiter-engine:5.5.2")
@@ -39,5 +47,28 @@ test {
 }
 
 application {
-    mainClassName = 'Main'
+    mainClassName = 'Test'
+    executableDir = 'custom_bin_dir'
+    applicationDefaultJvmArgs = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=7896']
+}
+
+task runGehirn(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    workingDir = 'build'
+
+    main = 'Samskaras'
+    //main = '-version'
+
+    jvmArgs '-Dhallo'
+    jvmArgs '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=7896'
+    //def allJvmArgs = []
+    //allJvmArgs.add("-Xdebug")
+    //allJvmArgs.add("-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=7896")
+    //allJvmArgs.add("-cp classes\\java\\main;C:\\Users\\matth\\.m2\\repository\\org\\javassist\\javassist\\3.25.0-GA\\javassist-3.25.0-GA.jar;\"C:\\Program Files\\Java\\jdk1.8.0_231\\lib\\tools.jar\"")
+
+    //println allJvmArgs
+
+
+   // arguments to pass to the application
+    args 'appArg1'
 }

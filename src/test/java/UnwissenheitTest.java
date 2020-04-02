@@ -4,7 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.PrintStream;
+import java.lang.reflect.Modifier;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Matchers.startsWith;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -23,19 +25,15 @@ class UnwissenheitTest  {
 
     static PrintStream backup;
     PrintStream mockOut;
-    /*
-     * This annotation is used if you want to execute some statements before all the test cases for e.g. test connection
-     * must be executed before all the test cases.
-     */
-    @BeforeClass
+
+    @BeforeClass /* This annotation is used if you want to execute some statements before all the test cases for e.g.
+    test connection must be executed before all the test cases. */
     static public void beforeClass() {
         backup = System.out;
     }
-    /*
-     * This annotation can be used if you want to execute some statements after all test cases for e.g. Releasing
-     * resources after executing all test cases.
-     */
-    @AfterClass
+
+    @AfterClass  /* This annotation can be used if you want to execute some statements after all test cases for e.g.
+     Releasing resources after executing all test cases. */
     static public void afterClass() {
         System.setOut(backup);
     }
@@ -47,32 +45,39 @@ class UnwissenheitTest  {
     }
 
     @Test
-    void testRichtigesWissen() {
+    void test_RichtigesWissen() {
         innerClass.richtigesWissen();
         verify(mockOut).println(startsWith("Gedanken an richtiges Wissen der Klasse "));
     }
 
     @Test
-    void testIrrtum() {
+    void test_Irrtum() {
         innerClass.irrtum();
         verify(mockOut).println(startsWith("Gedanken an einen Irrtum der Klasse "));
     }
 
     @Test
-    void testVorstellung() {
+    void test_Vorstellung() {
         innerClass.vorstellung();
         verify(mockOut).println(startsWith("Gedanken an eine Vorstellung der Klasse "));
     }
 
     @Test
-    void testTiefschlaf() {
+    void test_Tiefschlaf() {
         innerClass.tiefschlaf();
         verify(mockOut).println(startsWith("Gedanken an Schlaf der Klasse "));
     }
 
     @Test
-    void testErinnerung() {
+    void test_Erinnerung() {
         innerClass.erinnerung();
         verify(mockOut).println(startsWith("Gedanken an eine Erinnerung der Klasse"));
     }
+
+    @Test
+    void test_IsAbstract() {
+        Class myClass = Unwissenheit.class;
+        assertTrue(Modifier.isAbstract(myClass.getModifiers()));
+    }
+
 }
